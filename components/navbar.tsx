@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { Menu, X, Clock } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const navItems = [
   { name: "Home", href: "#home" },
@@ -17,12 +18,16 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [time, setTime] = useState<string>("")
+  const [active, setActive] = useState<string>("#home")
+  const { scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 })
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      setScrolled(window.scrollY > 24)
     }
-    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -33,23 +38,39 @@ export function Navbar() {
         timeZone: 'Asia/Manila',
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
         hour12: true
       }).format(now)
-      
+
       setTime(philippinesTime)
     }
 
     updateTime()
-    const interval = setInterval(updateTime, 1000)
+    const interval = setInterval(updateTime, 30000)
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(`#${entry.target.id}`)
+        })
+      },
+      { rootMargin: "-40% 0px -55% 0px" }
+    )
+    navItems.forEach((item) => {
+      const el = document.querySelector(item.href)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
   }, [])
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
+      setActive(href)
       setIsOpen(false)
     }
   }
@@ -58,53 +79,92 @@ export function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md"
-          : "bg-transparent"
+          ? "bg-white/75 dark:bg-gray-950/70 glass shadow-lg shadow-black/5 border-b border-black/5 dark:border-white/10"
+          : "bg-transparent border-b border-transparent"
       }`}
     >
+      {/* Scroll progress */}
+      <motion.div
+        style={{ scaleX: progress }}
+        className="absolute bottom-0 left-0 right-0 h-[2px] origin-left bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-500"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <motion.div
+          <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-xl font-bold text-gray-900 dark:text-white"
+            onClick={() => scrollToSection("#home")}
+            aria-label="Go to home"
+            className="flex items-center gap-2.5 group"
           >
-            FM
-          </motion.div>
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-bold text-sm text-white bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg shadow-violet-600/30 group-hover:shadow-violet-600/50 group-hover:scale-105 transition-all">
+              FM
+            </span>
+            <span className="hidden sm:block text-left leading-tight">
+              <span className="block text-sm font-bold text-gray-900 dark:text-white font-display">
+                Ferdinand Manteza
+              </span>
+              <span className="block text-[11px] text-gray-500 dark:text-gray-400">
+                Full Stack Developer
+              </span>
+            </span>
+          </motion.button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  active === item.href
+                    ? "text-blue-700 dark:text-white"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                }`}
               >
                 {item.name}
+                {active === item.href && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 -z-10 rounded-lg bg-blue-600/10 dark:bg-white/10 border border-blue-600/20 dark:border-white/10"
+                  />
+                )}
               </button>
             ))}
-            
-            {/* Live Clock */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700">
-              <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <div className="flex flex-col">
-                <span className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">
-                  {time || "00:00:00 AM"}
-                </span>
-                <span className="text-[10px] text-gray-600 dark:text-gray-400 leading-tight">
-                  PH Time
-                </span>
-              </div>
+
+            {/* Subtle live clock */}
+            <div
+              className="hidden lg:flex items-center gap-1.5 ml-2 px-2.5 py-1.5 text-xs text-gray-500 dark:text-gray-400"
+              title="Philippines time"
+            >
+              <Clock className="h-3.5 w-3.5" />
+              <span className="tabular-nums font-medium">{time || "--:--"}</span>
+              <span className="text-[10px] uppercase tracking-wider">PH</span>
+            </div>
+
+            <div className="ml-2 flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => scrollToSection("#contact")}
+                className="px-4 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 bg-[length:180%_100%] hover:bg-right shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 hover:-translate-y-px transition-all"
+              >
+                Hire Me
+              </button>
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile controls */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+            >
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -115,29 +175,37 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800"
+            transition={{ duration: 0.25 }}
+            className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 glass border-t border-black/5 dark:border-white/10"
           >
-            <div className="px-4 py-4 space-y-3">
-              {navItems.map((item) => (
-                <button
+            <div className="px-4 py-4 space-y-1">
+              {navItems.map((item, i) => (
+                <motion.button
                   key={item.name}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
                   onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                  className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    active === item.href
+                      ? "bg-gradient-to-r from-blue-600/10 to-fuchsia-600/10 text-blue-700 dark:text-white border border-blue-600/20 dark:border-white/10"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10"
+                  }`}
                 >
                   {item.name}
-                </button>
+                </motion.button>
               ))}
-              
-              {/* Mobile Live Clock */}
-              <div className="flex items-center justify-center gap-2 px-4 py-3 mt-4 rounded-lg bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700">
-                <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
-                    {time || "00:00:00 AM"}
-                  </span>
-                  <span className="text-xs text-gray-600 dark:text-gray-400 leading-tight">
-                    Philippines Time
-                  </span>
+
+              <div className="flex items-center gap-3 pt-3">
+                <button
+                  onClick={() => scrollToSection("#contact")}
+                  className="flex-1 px-4 py-3 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg"
+                >
+                  Hire Me
+                </button>
+                <div className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+                  <Clock className="h-4 w-4" />
+                  {time || "--:--"} PH
                 </div>
               </div>
             </div>

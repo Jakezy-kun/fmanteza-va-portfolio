@@ -1,121 +1,151 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Mail, Link2, MapPin, Code, Download, ExternalLink } from "lucide-react"
+import { Mail, MapPin, Download, ArrowUpRight, Copy, Check } from "lucide-react"
+import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons"
+import { useState } from "react"
+import { SectionHeading } from "@/components/ui/section-heading"
+import { Magnetic } from "@/components/ui/magnetic"
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 60 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 }
-}
+const EMAIL = "fmanteza_230000001892@uic.edu.ph"
+const RESUME_HREF = "/manteza-resume.pdf"
+
+const channels = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
+    gradient: "from-blue-500 to-cyan-400",
+  },
+  {
+    icon: LinkedinIcon,
+    label: "LinkedIn",
+    value: "ferdinand-m-manteza",
+    href: "https://www.linkedin.com/in/ferdinand-m-manteza-015564327/",
+    gradient: "from-[#0A66C2] to-[#004182]",
+  },
+  {
+    icon: GithubIcon,
+    label: "GitHub",
+    value: "github.com/Jakezy-kun",
+    href: "https://github.com/Jakezy-kun",
+    gradient: "from-gray-700 to-gray-950 dark:from-gray-600 dark:to-gray-800",
+  },
+]
 
 export function ContactSection() {
+  const [copied, setCopied] = useState(false)
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      setCopied(false)
+    }
+  }
+
   return (
-    <section id="contact" className="py-20 px-4 bg-white dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto">
-        <motion.h2
-          {...fadeInUp}
-          className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-white"
-        >
-          Get In Touch
-        </motion.h2>
+    <section id="contact" className="relative py-20 md:py-28 px-4 bg-white dark:bg-gray-950 overflow-hidden">
+      <div className="absolute inset-0 bg-mesh-bold opacity-60" aria-hidden />
+      <div className="relative max-w-6xl mx-auto">
+        <SectionHeading
+          eyebrow="Contact"
+          title="Let's build"
+          highlight="together"
+          description="Have a project, role, or collaboration in mind? My inbox is always open."
+        />
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-5 md:gap-6">
           <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-4"
           >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h3>
-            
-            <a
-              href="mailto:fmanteza_230000001892@uic.edu.ph"
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-lg hover:shadow-lg transition-shadow group"
-            >
-              <div className="w-12 h-12 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Mail className="text-white" size={24} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
-                <p className="text-gray-900 dark:text-white font-semibold">fmanteza_230000001892@uic.edu.ph</p>
-              </div>
-            </a>
+            <h3 className="font-display text-xl font-bold text-gray-900 dark:text-white">
+              Contact Information
+            </h3>
 
-            <a
-              href="https://www.linkedin.com/in/ferdinand-m-manteza-015564327/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-700 rounded-lg hover:shadow-lg transition-shadow group"
-            >
-              <div className="w-12 h-12 bg-blue-700 dark:bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <svg className="text-white w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">LinkedIn</p>
-                <p className="text-gray-900 dark:text-white font-semibold">linkedin.com/in/your-profile</p>
-              </div>
-            </a>
+            {channels.map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                target={c.href.startsWith("http") ? "_blank" : undefined}
+                rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              >
+                <Magnetic strength={6}>
+                <span className={`w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br ${c.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                  <c.icon size={22} />
+                </span>
+                </Magnetic>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    {c.label}
+                  </span>
+                  <span className="block font-semibold text-gray-900 dark:text-white truncate text-sm sm:text-base">
+                    {c.value}
+                  </span>
+                </span>
+                <ArrowUpRight size={18} className="shrink-0 text-gray-400 group-hover:text-violet-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </a>
+            ))}
 
-            <a
-              href="https://github.com/Jakezy-kun"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-lg hover:shadow-lg transition-shadow group"
-            >
-              <div className="w-12 h-12 bg-purple-600 dark:bg-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Code className="text-white" size={24} />
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10">
+              <span className="w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white shadow-lg">
+                <MapPin size={22} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">Location</p>
+                <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
+                  Calinan, Davao City, Philippines
+                </p>
               </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">GitHub</p>
-                <p className="text-gray-900 dark:text-white font-semibold">github.com/Jakezy-kun</p>
-              </div>
-            </a>
-
-            <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-800 dark:to-gray-700 rounded-lg">
-              <div className="w-12 h-12 bg-orange-600 dark:bg-orange-500 rounded-full flex items-center justify-center">
-                <MapPin className="text-white" size={24} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Location</p>
-                <p className="text-gray-900 dark:text-white font-semibold">Calinan, Davao City, Philippines</p>
-              </div>
+              <button
+                onClick={copyEmail}
+                aria-label={copied ? "Email copied" : "Copy email address"}
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-200 hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+              >
+                {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                {copied ? "Copied!" : "Copy email"}
+              </button>
             </div>
           </motion.div>
 
           <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-700 rounded-xl p-8"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.12 }}
+            className="relative flex flex-col justify-center items-center text-center rounded-3xl p-8 md:p-10 overflow-hidden bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 text-white shadow-2xl shadow-violet-600/30"
           >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
-              Interested in working together?
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300 text-center mb-6">
-              Download my resume to learn more about my experience and skills.
-            </p>
-            
-            {/* IMPORTANT: Place your resume PDF at /public/Manteza_resume.pdf */}
-            <a
-              href="/Manteza _ resume.pdf"
-              download="Manteza_resume.pdf"
-              className="flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            >
-              <Download size={24} />
-              Download Resume
-            </a>
+            <div className="absolute inset-0 bg-dot-grid opacity-25" aria-hidden />
+            <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/20 blur-3xl" aria-hidden />
+            <div className="relative">
+              <h3 className="font-display text-2xl md:text-3xl font-bold mb-3 text-balance">
+                Interested in working together?
+              </h3>
+              <p className="text-white/85 mb-7 max-w-sm">
+                Download my resume to see experience, projects, and skills in detail.
+              </p>
 
-            <a
-              href="https://jakezy-kun.github.io/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-4 text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              <ExternalLink size={18} />
-              Visit My Portfolio Website
-            </a>
+              <a
+                href={RESUME_HREF}
+                download="Manteza_resume.pdf"
+                className="inline-flex items-center gap-2.5 px-8 py-4 bg-white text-gray-900 rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all"
+              >
+                <Download size={20} />
+                Download Resume
+              </a>
+
+              <p className="mt-5 text-xs text-white/70">
+                Prefer email? <span className="font-semibold text-white break-all">{EMAIL}</span>
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0284c7"/>
+      <stop offset="0.55" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#ffffff" opacity="0.16"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <rect width="800" height="450" fill="url(#dots)"/>
+  <circle cx="700" cy="80" r="145" fill="#ffffff" opacity="0.12"/>
+  <circle cx="110" cy="380" r="110" fill="#000000" opacity="0.12"/>
+  <circle cx="650" cy="220" r="70" fill="none" stroke="#ffffff" stroke-width="10" opacity="0.55"/>
+  <path d="M650 170 v100 M600 220 h100" stroke="#ffffff" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+  <text x="64" y="220" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="bold" fill="#ffffff">Chrono-List</text>
+  <text x="66" y="266" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#ffffff" opacity="0.85">Frontend Task Manager</text>
+  <rect x="66" y="296" width="120" height="8" rx="4" fill="#ffffff" opacity="0.6"/>
+</svg>

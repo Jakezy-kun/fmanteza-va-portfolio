@@ -75,20 +75,24 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center md:justify-start mb-8">
-            <a
+            <motion.a
               href="#contact"
-              className="group inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 bg-[length:180%_100%] hover:bg-right text-white font-semibold rounded-2xl shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:-translate-y-0.5 transition-all"
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 500, damping: 22 }}
+              className="group inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 bg-[length:180%_100%] hover:bg-right text-white font-semibold rounded-2xl shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] touch-manipulation transition-all"
             >
-              <Mail size={19} className="group-hover:rotate-6 transition-transform" />
+              <Mail size={19} className="group-hover:rotate-6 group-active:rotate-6 transition-transform" />
               Hire Me
-            </a>
-            <button
+            </motion.a>
+            <motion.button
               onClick={scrollToAbout}
-              className="inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-2xl bg-white/70 dark:bg-white/10 glass border border-black/10 dark:border-white/15 text-gray-900 dark:text-white hover:border-violet-500/50 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 500, damping: 22 }}
+              className="inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-2xl bg-white/70 dark:bg-white/10 glass border border-black/10 dark:border-white/15 text-gray-900 dark:text-white hover:border-violet-500/50 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] touch-manipulation transition-all"
             >
               <FolderGit2 size={19} />
               View Projects
-            </button>
+            </motion.button>
             <div className="flex items-center gap-2">
               <Magnetic strength={8}>
               <a
@@ -157,13 +161,15 @@ export function HeroSection() {
             </div>
 
             {floatingChips.map((chip) => (
-              <span
+              <motion.span
                 key={chip.label}
                 style={{ animationDelay: chip.delay }}
-                className={`absolute ${chip.className} px-3 py-1.5 rounded-full text-xs font-semibold bg-white/85 dark:bg-gray-900/85 glass border border-black/10 dark:border-white/15 text-gray-800 dark:text-gray-100 shadow-lg animate-float whitespace-nowrap`}
+                whileTap={{ scale: 1.15, rotate: -3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                className={`absolute ${chip.className} px-3 py-1.5 rounded-full text-xs font-semibold bg-white/85 dark:bg-gray-900/85 glass border border-black/10 dark:border-white/15 text-gray-800 dark:text-gray-100 shadow-lg animate-float whitespace-nowrap touch-manipulation cursor-pointer`}
               >
                 {chip.label}
-              </span>
+              </motion.span>
             ))}
           </div>
         </motion.div>

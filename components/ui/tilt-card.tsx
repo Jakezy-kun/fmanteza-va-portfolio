@@ -9,7 +9,13 @@ interface TiltCardProps {
   maxTilt?: number;
 }
 
-/** Subtle 3D tilt + glow on hover for cards. Disabled on touch / reduced-motion. */
+/**
+ * Subtle 3D tilt + glow.
+ * - Desktop: tilts toward the cursor on hover.
+ * - Touch: tilts toward the finger while dragging across the card and
+ *   springs back on release, plus a tap bounce — so mobile feels alive.
+ * Motion is fully disabled for prefers-reduced-motion.
+ */
 export function TiltCard({ children, className, maxTilt = 6 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const px = useMotionValue(0.5);
@@ -24,27 +30,43 @@ export function TiltCard({ children, className, maxTilt = 6 }: TiltCardProps) {
   });
   const [active, setActive] = useState(false);
   // Start disabled so SSR and first client render match; enable after hydration.
-  const [enabled, setEnabled] = useState(false);
+  const [canHover, setCanHover] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const mqHover = window.matchMedia("(hover: hover) and (pointer: fine)");
     const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setEnabled(mqHover.matches && !mqMotion.matches);
-    update();
-    mqHover.addEventListener("change", update);
-    mqMotion.addEventListener("change", update);
+    const updateHover = () => setCanHover(mqHover.matches);
+    const updateMotion = () => setReducedMotion(mqMotion.matches);
+    updateHover();
+    updateMotion();
+    mqHover.addEventListener("change", updateHover);
+    mqMotion.addEventListener("change", updateMotion);
     return () => {
-      mqHover.removeEventListener("change", update);
-      mqMotion.removeEventListener("change", update);
+      mqHover.removeEventListener("change", updateHover);
+      mqMotion.removeEventListener("change", updateMotion);
     };
   }, []);
 
-  const onMove = (e: React.MouseEvent) => {
-    if (!enabled || !ref.current) return;
+  const motionOK = !reducedMotion;
+
+  const tiltTo = (clientX: number, clientY: number) => {
+    if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    px.set((e.clientX - rect.left) / rect.width);
-    py.set((e.clientY - rect.top) / rect.height);
+    px.set(Math.min(1, Math.max(0, (clientX - rect.left) / rect.width)));
+    py.set(Math.min(1, Math.max(0, (clientY - rect.top) / rect.height)));
     setActive(true);
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!motionOK || !canHover) return;
+    tiltTo(e.clientX, e.clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!motionOK || e.touches.length === 0) return;
+    const t = e.touches[0];
+    tiltTo(t.clientX, t.clientY);
   };
 
   const reset = () => {
@@ -56,14 +78,20 @@ export function TiltCard({ children, className, maxTilt = 6 }: TiltCardProps) {
   return (
     <motion.div
       ref={ref}
-      onMouseMove={onMove}
+      onMouseMove={onMouseMove}
       onMouseLeave={reset}
+      onTouchMove={onTouchMove}
+      onTouchEnd={reset}
+      onTouchCancel={reset}
+      // Tap bounce so mobile taps get immediate tactile feedback.
+      whileTap={motionOK ? { scale: 0.97 } : undefined}
+      transition={{ type: "spring", stiffness: 350, damping: 22 }}
       style={
-        enabled
+        motionOK
           ? { rotateX, rotateY, transformPerspective: 900 }
           : undefined
       }
-      className={`${className ?? ""} ${active ? "shadow-2xl shadow-violet-600/20" : ""} transition-shadow`}
+      className={`${className ?? ""} ${active ? "shadow-2xl shadow-violet-600/20" : ""} transition-shadow touch-manipulation`}
     >
       {children}
     </motion.div>

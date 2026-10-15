@@ -9,7 +9,11 @@ interface MagneticProps {
   className?: string;
 }
 
-/** Wraps interactive elements so they drift toward the cursor on hover (desktop only). */
+/**
+ * Wraps interactive elements so they drift toward the cursor on hover (desktop).
+ * On touch devices it renders a springy tap response instead, so mobile
+ * taps still feel alive.
+ */
 export function Magnetic({ children, strength = 10, className }: MagneticProps) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -49,8 +53,12 @@ export function Magnetic({ children, strength = 10, className }: MagneticProps) 
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={reset}
+      // Tap spring gives mobile users tactile feedback even though
+      // magnetic drift itself is desktop-only.
+      whileTap={enabled ? { scale: 0.94 } : { scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 500, damping: 22 }}
       style={enabled ? { x: sx, y: sy } : undefined}
-      className={className}
+      className={`${className ?? ""} touch-manipulation select-none`.trim()}
     >
       {children}
     </motion.div>

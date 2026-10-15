@@ -110,14 +110,15 @@ export function AboutSection() {
           {cards.map((card, i) => (
             <motion.article
               key={card.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: (i % 2) * 0.1 }}
-              className={`group relative overflow-hidden rounded-2xl p-6 md:p-7 bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl ${card.glow} hover:-translate-y-1 transition-all`}
+              initial={{ opacity: 0, y: 28, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.55, delay: (i % 2) * 0.1, type: "spring", stiffness: 120, damping: 18 }}
+              whileTap={{ scale: 0.97 }}
+              className={`group relative overflow-hidden rounded-2xl p-6 md:p-7 bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl active:shadow-xl ${card.glow} hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all`}
             >
               <span className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.accent}`} aria-hidden />
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${card.accent} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform`}>
+              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${card.accent} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 group-active:scale-110 group-active:rotate-3 transition-transform`}>
                 <card.icon className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-display text-xl font-bold mb-3 text-gray-900 dark:text-white">{card.title}</h3>

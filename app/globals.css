@@ -83,6 +83,19 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+  /* Global mobile polish: no tap flash, snappy buttons, smooth scroll. */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    /* Touch devices get press feedback even where only :hover existed. */
+    button:active,
+    a:active {
+      transition-duration: 120ms;
+    }
   }
   ::selection {
     background: linear-gradient(90deg, #2563eb, #7c3aed, #d946ef);
@@ -120,6 +133,23 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  /* Hide scrollbars for swipeable rows (filters) while keeping scroll. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  /* Remove grey tap flash on mobile; we use spring scale instead. */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .touch-pan-y {
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
   }
   .font-display {
     font-family: var(--font-display);

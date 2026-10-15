@@ -62,7 +62,7 @@ export function ContactSection() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6 }}
             className="space-y-4"
           >
@@ -76,7 +76,7 @@ export function ContactSection() {
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                className="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-md hover:shadow-xl active:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all"
               >
                 <Magnetic strength={6}>
                 <span className={`w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br ${c.gradient} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
@@ -117,11 +117,12 @@ export function ContactSection() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.12 }}
-            className="relative flex flex-col justify-center items-center text-center rounded-3xl p-8 md:p-10 overflow-hidden bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 text-white shadow-2xl shadow-violet-600/30"
+            whileTap={{ scale: 0.99 }}
+            className="relative flex flex-col justify-center items-center text-center rounded-3xl p-8 md:p-10 overflow-hidden bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 text-white shadow-2xl shadow-violet-600/30 touch-manipulation"
           >
             <div className="absolute inset-0 bg-dot-grid opacity-25" aria-hidden />
             <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/20 blur-3xl" aria-hidden />

@@ -157,22 +157,26 @@ export function ProjectsSection() {
           description="Organized by discipline — filter to see my Full Stack, UI/UX, QA, and mobile work."
         />
 
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10" role="group" aria-label="Filter projects by discipline">
-          {filters.map((f) => (
-            <button
-              key={f}
-              aria-pressed={active === f}
-              onClick={() => setActive(f)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all border min-h-[40px] ${
-                active === f
-                  ? "text-white bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 border-transparent shadow-lg shadow-violet-600/30"
-                  : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-black/10 dark:border-white/10 hover:border-violet-500/40"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+        {/* Filters — horizontally swipeable snap row on mobile, wrapped grid on desktop */}
+        <div className="mb-10 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto md:overflow-visible scrollbar-none" role="group" aria-label="Filter projects by discipline">
+          <div className="flex md:flex-wrap md:justify-center gap-2 w-max md:w-auto snap-x snap-mandatory md:snap-none pb-1">
+            {filters.map((f) => (
+              <motion.button
+                key={f}
+                aria-pressed={active === f}
+                onClick={() => setActive(f)}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 500, damping: 22 }}
+                className={`snap-start shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all border min-h-[44px] touch-manipulation active:scale-95 ${
+                  active === f
+                    ? "text-white bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 border-transparent shadow-lg shadow-violet-600/30"
+                    : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 border-black/10 dark:border-white/10 hover:border-violet-500/40 active:border-violet-500/60"
+                }`}
+              >
+                {f}
+              </motion.button>
+            ))}
+          </div>
         </div>
 
         <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
@@ -188,7 +192,7 @@ export function ProjectsSection() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.94 }}
                     transition={{ duration: 0.35 }}
-                    className="group flex flex-col h-full overflow-hidden rounded-2xl bg-white dark:bg-gray-950 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all"
+                    className="group flex flex-col h-full overflow-hidden rounded-2xl bg-white dark:bg-gray-950 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl active:shadow-xl hover:-translate-y-1.5 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all"
                   >
                     {/* Cover: 1 photo = static, 2+ photos = 3s auto carousel */}
                     <ProjectCover

@@ -57,7 +57,7 @@ export function ExperienceSection() {
                 key={exp.company}
                 initial={{ opacity: 0, x: -32 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.6, delay: index * 0.12 }}
                 className="relative pl-12 md:pl-16"
               >
@@ -69,7 +69,7 @@ export function ExperienceSection() {
                   </span>
                 </span>
 
-                <div className="group rounded-2xl p-6 md:p-7 bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden">
+                <motion.div whileTap={{ scale: 0.98 }} className="group rounded-2xl p-6 md:p-7 bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl active:shadow-xl hover:-translate-y-1 active:translate-y-0 touch-manipulation transition-all overflow-hidden">
                   <span className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${exp.accent}`} aria-hidden />
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
                     <div>
@@ -107,7 +107,7 @@ export function ExperienceSection() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               </motion.article>
             ))}
           </div>

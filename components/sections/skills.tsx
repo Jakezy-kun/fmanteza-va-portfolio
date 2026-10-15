@@ -90,14 +90,15 @@ export function SkillsSection() {
           {coreSkills.map((skill, index) => (
             <motion.article
               key={skill.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 28, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.55, delay: (index % 3) * 0.08 }}
-              className="group rounded-2xl p-6 bg-white dark:bg-gray-950 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all"
+              whileTap={{ scale: 0.97 }}
+              className="group rounded-2xl p-6 bg-white dark:bg-gray-950 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl active:shadow-xl hover:-translate-y-1.5 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${skill.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform`}>
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${skill.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 group-active:scale-110 group-active:rotate-3 transition-transform`}>
                   <skill.icon className="w-6 h-6 text-white" />
                 </div>
                 <span className="font-display text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -109,19 +110,20 @@ export function SkillsSection() {
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.level}%` }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.4 }}
                   transition={{ duration: 1, delay: 0.2 }}
                   className={`h-full rounded-full bg-gradient-to-r ${skill.bar}`}
                 />
               </div>
               <div className="flex flex-wrap gap-2">
                 {skill.items.map((item) => (
-                  <span
+                  <motion.span
                     key={item}
-                    className="px-2.5 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/10 border border-black/5 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-violet-500/40 transition-colors"
+                    whileTap={{ scale: 1.12 }}
+                    className="px-2.5 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/10 border border-black/5 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:border-violet-500/40 active:border-violet-500/60 active:bg-violet-500/10 touch-manipulation transition-colors cursor-pointer"
                   >
                     {item}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.article>

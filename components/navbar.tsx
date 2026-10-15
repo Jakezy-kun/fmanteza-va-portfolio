@@ -156,60 +156,81 @@ export function Navbar() {
           {/* Mobile controls */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
-            <button
+            <motion.button
               onClick={() => setIsOpen(!isOpen)}
               aria-expanded={isOpen}
               aria-label={isOpen ? "Close menu" : "Open menu"}
-              className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              whileTap={{ scale: 0.85, rotate: 8 }}
+              className="p-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 active:bg-black/10 dark:active:bg-white/15 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
             >
-              {isOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+              <motion.span
+                key={isOpen ? "x" : "menu"}
+                initial={{ rotate: -45, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.18 }}
+              >
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
+              </motion.span>
+            </motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation — springy stagger + tap bounce so it feels alive */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 glass border-t border-black/5 dark:border-white/10"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navItems.map((item, i) => (
-                <motion.button
-                  key={item.name}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    active === item.href
-                      ? "bg-gradient-to-r from-blue-600/10 to-fuchsia-600/10 text-blue-700 dark:text-white border border-blue-600/20 dark:border-white/10"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10"
-                  }`}
-                >
-                  {item.name}
-                </motion.button>
-              ))}
+          <>
+            <motion.button
+              aria-hidden
+              tabIndex={-1}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="md:hidden fixed inset-0 top-16 -z-10 bg-black/20 backdrop-blur-[1px] cursor-default"
+            />
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+              className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 glass border-t border-black/5 dark:border-white/10"
+            >
+              <div className="px-4 py-4 space-y-1">
+                {navItems.map((item, i) => (
+                  <motion.button
+                    key={item.name}
+                    initial={{ opacity: 0, x: -16, scale: 0.98 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ delay: 0.03 + i * 0.045, type: "spring", stiffness: 400, damping: 26 }}
+                    whileTap={{ scale: 0.96, x: 4 }}
+                    onClick={() => scrollToSection(item.href)}
+                    className={`block w-full text-left px-4 py-3 rounded-xl text-[15px] font-medium transition-colors touch-manipulation active:scale-[0.98] min-h-[48px] ${
+                      active === item.href
+                        ? "bg-gradient-to-r from-blue-600/10 to-fuchsia-600/10 text-blue-700 dark:text-white border border-blue-600/20 dark:border-white/10"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 active:bg-black/10 dark:active:bg-white/15"
+                    }`}
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
 
-              <div className="flex items-center gap-3 pt-3">
-                <button
-                  onClick={() => scrollToSection("#contact")}
-                  className="flex-1 px-4 py-3 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg"
-                >
-                  Hire Me
-                </button>
-                <div className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-500 dark:text-gray-400 tabular-nums">
-                  <Clock className="h-4 w-4" />
-                  {time || "--:--"} PH
+                <div className="flex items-center gap-3 pt-3">
+                  <motion.button
+                    onClick={() => scrollToSection("#contact")}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 px-4 py-3.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg active:shadow-md active:scale-[0.97] touch-manipulation transition-all min-h-[48px]"
+                  >
+                    Hire Me
+                  </motion.button>
+                  <div className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+                    <Clock className="h-4 w-4" />
+                    {time || "--:--"} PH
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

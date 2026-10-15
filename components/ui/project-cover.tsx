@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -35,10 +35,26 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  const touchX = useRef<number | null>(null);
+
   const go = useCallback(
     (dir: 1 | -1) => setIdx((i) => (i + dir + count) % count),
     [count]
   );
+
+  // Swipe support for touch: horizontal drag changes slide, vertical
+  // scroll is left alone so the page still scrolls naturally.
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current == null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchX.current;
+    const dx = endX - touchX.current;
+    touchX.current = null;
+    if (Math.abs(dx) < 32) return;
+    go(dx < 0 ? 1 : -1);
+  };
 
   useEffect(() => {
     if (!multi || paused || reducedMotion) return;
@@ -48,11 +64,20 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
 
   return (
     <div
-      className="relative h-44 overflow-hidden"
+      className="relative h-44 overflow-hidden touch-pan-y select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onTouchStart={(e) => {
+        setPaused(true);
+        onTouchStart(e);
+      }}
+      onTouchMove={() => setPaused(true)}
+      onTouchEnd={(e) => {
+        onTouchEnd(e);
+        setPaused(false);
+      }}
     >
       {images.map((src, i) => (
         <div
@@ -67,7 +92,7 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
             alt={i === idx ? `${title} project cover${multi ? ` — slide ${i + 1} of ${count}` : ""}` : ""}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-500"
             priority={false}
           />
         </div>
@@ -88,28 +113,35 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
           <button
             onClick={() => go(-1)}
             aria-label={`Previous slide for ${title}`}
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center bg-black/50 text-white border border-white/25 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:bg-black/70 transition-opacity"
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center bg-black/50 text-white border border-white/25 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100 hover:bg-black/70 active:scale-90 active:bg-black/80 transition-all touch-manipulation"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={() => go(1)}
             aria-label={`Next slide for ${title}`}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center bg-black/50 text-white border border-white/25 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:bg-black/70 transition-opacity"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center bg-black/50 text-white border border-white/25 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100 hover:bg-black/70 active:scale-90 active:bg-black/80 transition-all touch-manipulation"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={18} />
           </button>
-          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" role="group" aria-label={`${title} slides`}>
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-2 px-2 py-1" role="group" aria-label={`${title} slides`}>
             {images.map((src, i) => (
               <button
                 key={src}
                 onClick={() => setIdx(i)}
                 aria-label={`Go to slide ${i + 1} of ${count} for ${title}`}
                 aria-current={i === idx}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === idx ? "w-5 bg-white" : "w-1.5 bg-white/50 hover:bg-white/80"
+                className={`h-2 rounded-full transition-all touch-manipulation min-w-[28px] min-h-[28px] flex items-center justify-center ${
+                  i === idx ? "w-7" : "w-7 opacity-70"
                 }`}
-              />
+              >
+                <span
+                  aria-hidden
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === idx ? "w-5 bg-white" : "w-1.5 bg-white/60"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </>

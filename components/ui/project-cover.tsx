@@ -11,20 +11,40 @@ interface ProjectCoverProps {
   title: string;
   year: string;
   featured: boolean;
+  /** Fallback gradient for the empty state (Tailwind from/via/to stops). */
+  accent?: string;
+  /**
+   * When true, `images[0]` is treated as the SVG title cover (fills the
+   * frame) and every following image is a screenshot shown in full
+   * (object-contain) over a blurred copy of itself — so nothing is cropped
+   * regardless of the screenshot's aspect ratio.
+   */
+  titleSlide?: boolean;
 }
 
+const DEFAULT_ACCENT = "from-blue-600 via-violet-600 to-fuchsia-600";
+
 /**
- * Project cover art.
- * - 1 image  → static cover.
- * - 2+ images → auto-playing carousel (crossfade every 3s),
- *   with dots, arrows, pause-on-hover, and reduced-motion support.
+ * Project cover art — a fixed 16:9, fully responsive media area.
+ * - Title-only projects: cover art fills the frame (object-cover).
+ * - Photo projects (titleSlide): slide 1 is the original SVG title cover,
+ *   then each screenshot fits entirely over a blurred backdrop.
+ * - 2+ slides → auto-playing crossfade (3s) with dots, arrows, swipe,
+ *   pause-on-hover, and reduced-motion support.
  */
-export function ProjectCover({ images, title, year, featured }: ProjectCoverProps) {
+export function ProjectCover({
+  images,
+  title,
+  year,
+  featured,
+  accent = DEFAULT_ACCENT,
+  titleSlide = false,
+}: ProjectCoverProps) {
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const count = images.length;
-  const multi = count > 1;
+  const total = images.length;
+  const multi = total > 1;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -38,8 +58,8 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
   const touchX = useRef<number | null>(null);
 
   const go = useCallback(
-    (dir: 1 | -1) => setIdx((i) => (i + dir + count) % count),
-    [count]
+    (dir: 1 | -1) => setIdx((i) => (i + dir + total) % total),
+    [total]
   );
 
   // Swipe support for touch: horizontal drag changes slide, vertical
@@ -58,13 +78,15 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
 
   useEffect(() => {
     if (!multi || paused || reducedMotion) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % count), AUTOPLAY_MS);
+    const t = setInterval(() => setIdx((i) => (i + 1) % total), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [multi, paused, reducedMotion, count]);
+  }, [multi, paused, reducedMotion, total]);
+
+  const sizes = "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
   return (
     <div
-      className="relative h-44 overflow-hidden touch-pan-y select-none"
+      className="relative w-full aspect-video overflow-hidden touch-pan-y select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -79,25 +101,67 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
         setPaused(false);
       }}
     >
-      {images.map((src, i) => (
-        <div
-          key={src}
-          aria-hidden={i !== idx}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            i === idx ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <Image
-            src={src}
-            alt={i === idx ? `${title} project cover${multi ? ` — slide ${i + 1} of ${count}` : ""}` : ""}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-500"
-            priority={false}
-          />
+      {total === 0 && (
+        <div className={`absolute inset-0 bg-gradient-to-br ${accent}`}>
+          <div className="absolute inset-0 bg-dot-grid opacity-25" aria-hidden />
+          <div className="absolute inset-0 flex items-center justify-center p-6">
+            <span className="font-display text-xl font-bold text-center text-white/95 drop-shadow">
+              {title}
+            </span>
+          </div>
         </div>
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" aria-hidden />
+      )}
+
+      {images.map((src, i) => {
+        const active = i === idx;
+        // Slide 1 of a photo project is the SVG title cover; the rest are
+        // screenshots (or, for title-only projects, every image is a cover).
+        const isCover = !titleSlide || i === 0;
+        return (
+          <div
+            key={src}
+            aria-hidden={!active}
+            className={`absolute inset-0 transition-opacity duration-700 ${
+              active ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {isCover ? (
+              <Image
+                src={src}
+                alt={active ? `${title} project cover${multi ? ` — slide ${i + 1} of ${total}` : ""}` : ""}
+                fill
+                sizes={sizes}
+                className="object-cover group-hover:scale-105 group-active:scale-105 transition-transform duration-500"
+                priority={false}
+              />
+            ) : (
+              <>
+                {/* Blurred copy fills the frame so the contained shot never
+                    leaves empty bars — adapts to any image aspect ratio. */}
+                <Image
+                  src={src}
+                  alt=""
+                  aria-hidden
+                  fill
+                  sizes={sizes}
+                  className="object-cover scale-110 blur-2xl opacity-60"
+                  priority={false}
+                />
+                <div className="absolute inset-0 bg-black/15" aria-hidden />
+                <Image
+                  src={src}
+                  alt={active ? `${title} screenshot${multi ? ` — slide ${i + 1} of ${total}` : ""}` : ""}
+                  fill
+                  sizes={sizes}
+                  className="object-contain"
+                  priority={false}
+                />
+              </>
+            )}
+          </div>
+        );
+      })}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent pointer-events-none" aria-hidden />
 
       <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-black/45 text-white glass border border-white/20">
         {year}
@@ -125,15 +189,13 @@ export function ProjectCover({ images, title, year, featured }: ProjectCoverProp
             <ChevronRight size={18} />
           </button>
           <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-2 px-2 py-1" role="group" aria-label={`${title} slides`}>
-            {images.map((src, i) => (
+            {Array.from({ length: total }).map((_, i) => (
               <button
-                key={src}
+                key={i}
                 onClick={() => setIdx(i)}
-                aria-label={`Go to slide ${i + 1} of ${count} for ${title}`}
+                aria-label={`Go to slide ${i + 1} of ${total} for ${title}`}
                 aria-current={i === idx}
-                className={`h-2 rounded-full transition-all touch-manipulation min-w-[28px] min-h-[28px] flex items-center justify-center ${
-                  i === idx ? "w-7" : "w-7 opacity-70"
-                }`}
+                className="h-2 rounded-full transition-all touch-manipulation min-w-[28px] min-h-[28px] flex items-center justify-center w-7"
               >
                 <span
                   aria-hidden

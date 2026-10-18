@@ -9,6 +9,7 @@ import {
   Gamepad2,
   ShieldCheck,
   MonitorSmartphone,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -68,60 +69,238 @@ interface Project {
   // 1. Drop .jpg/.png files into public/projects/ (e.g. public/projects/palitab/shot-1.jpg)
   // 2. List them here. 1 photo = static cover. 2+ photos = auto-playing
   //    carousel (crossfades every 3s, with dots + arrows + pause on hover).
+  //    Leave empty [] to show a branded gradient cover instead.
   images: string[]
   featured: boolean
+  // LIVE SITE: replace the "#" placeholder with the deployed URL
+  // (e.g. "https://primera-ai.vercel.app"). The tap-to-visit icon only
+  // renders on cards that have a url — delete the line to hide it.
+  url?: string
+  // highlight marks a card with the featured badge AND an accent ring
+  highlight?: boolean
+  // titleSlide: prepends a gradient title card as slide 1 and shows the
+  // screenshots in full (uncropped) over a blurred backdrop. Turn on for
+  // cards whose `images` are real screenshots (mixed aspect ratios).
+  // `accent` overrides the title-card gradient (Tailwind from/via/to stops).
+  titleSlide?: boolean
+  accent?: string
 }
 
 const projects: Project[] = [
   {
-    title: "Palitab",
-    year: "2025",
-    discipline: "Game Dev",
-    role: "Mobile Developer / Game Developer / UI/UX Designer",
-    description: "A mobile application game using Filipino classic stories in English with XP-based story unlocking progression and WH comprehension questions.",
-    tags: ["Mobile", "Game Dev", "UI/UX", "Educational"],
-    images: ["/projects/palitab.svg", "/projects/palitab-2.svg"],
+    title: "Socorra",
+    year: "2026",
+    discipline: "Full Stack",
+    role: "UI/UX Designer and Full Stack Developer",
+    description:
+      "An AI-assisted checker for paper-based MCQ tests. Philippine public school teachers photograph answer sheets written on ordinary ruled paper, and a vision-language model reads the handwritten answers. Low-confidence readings go to the teacher for review before the system grades against the answer key. It also produces DepEd-aligned item and competency analytics, plus Excel exports for class records.",
+    tags: ["Web", "Full Stack", "AI", "Education", "Supabase", "Ollama", "React", "TypeScript"],
+    images: [
+      "/projects/socorra.svg",
+      "/projects/socorra/Onboarding Page.png",
+      "/projects/socorra/Login Page.png",
+    ],
     featured: true,
+    url: "#",
+    highlight: true,
+    titleSlide: true,
+    accent: "from-teal-600 via-cyan-600 to-blue-600",
   },
   {
-    title: "Reboot",
-    year: "2025",
+    title: "PrimeraAI",
+    year: "2026",
+    discipline: "Full Stack",
+    role: "UI/UX Designer and Full Stack Developer",
+    description:
+      "An AI-powered learning platform with lesson-scoped retrieval-augmented generation (RAG). It manages classes, lessons, quizzes, and student mastery, and includes parent-student links and AI monitoring. I contributed to the design audit, the documentation, and the business model.",
+    tags: ["Web", "Full Stack", "AI", "RAG", "Education", "Laravel", "Gemini", "Supabase"],
+    images: [
+      "/projects/primera-ai.svg",
+      "/projects/primera-ai/Onboarding Page.png",
+      "/projects/primera-ai/Login Page.png",
+      "/projects/primera-ai/Student Dashboard Page.png",
+      "/projects/primera-ai/Teacher Dashboard Page.png",
+      "/projects/primera-ai/Parent Dashboard Page.png",
+      "/projects/primera-ai/Admin Dashboard Page.png",
+    ],
+    featured: true,
+    url: "#",
+    highlight: true,
+    titleSlide: true,
+    accent: "from-indigo-600 via-violet-600 to-fuchsia-600",
+  },
+  {
+    title: "PawPedia",
+    year: "2026",
     discipline: "Mobile Dev",
-    role: "Mobile Developer / UI/UX Designer",
-    description: "An e-commerce mobile application focusing on e-waste technologies, specializing in selling 2nd hand technologies.",
-    tags: ["Mobile", "E-commerce", "UI/UX", "Sustainability"],
-    images: ["/projects/reboot.svg"],
+    role: "UI/UX Designer and Mobile & Full Stack Developer",
+    description:
+      "A mobile dog-breeds directory where users browse breeds by group, search and filter by name or country, and save favourites. It is backed by a custom PHP/MySQL REST API with full CRUD and bearer-token auth, and live dog photos come from the Dog CEO API. Accounts, profiles, and synced favourites run on Supabase with email sign-in and a guest mode that stores favourites on the device — and it works without any API keys by falling back to bundled sample breeds.",
+    tags: ["Mobile", "Full Stack", "Flutter", "REST API", "Supabase", "PHP", "MySQL"],
+    images: ["/projects/pawpedia.svg"],
     featured: true,
+    url: "#",
+    highlight: true,
   },
   {
-    title: "Effici-admin / OSAD Hub",
+    title: "Lamdag LMS",
     year: "2025",
-    discipline: "QA",
-    role: "Quality Assurance (QA)",
-    description: "A Web-Based System that streamlines how CCS students, CCS admins, and CCS dean collaborate on campus activity plans and equipment logistics.",
-    tags: ["Web", "QA", "Collaboration", "Education"],
-    images: ["/projects/effici-admin.svg"],
+    discipline: "Frontend",
+    role: "Full UI/UX Designer and Frontend Developer",
+    description:
+      "A cloud-based e-learning platform where teachers create courses, upload materials, and assign work. Gemini 2.5 Flash generates quizzes from the uploaded materials, and teachers review, edit, and approve every question before it reaches students. Students enroll with a course code, take auto-scored quizzes, and track their progress, while teachers see class-level analytics.",
+    tags: ["Web", "Frontend", "AI", "LMS", "Education", "Next.js", "Supabase"],
+    images: [
+      "/projects/lamdag-lms.svg",
+      "/projects/lamdag-lms/Screenshot 2026-10-12 165405.png",
+      "/projects/lamdag-lms/Screenshot 2026-10-12 165434.png",
+    ],
     featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-emerald-600 via-teal-600 to-cyan-600",
   },
   {
-    title: "Grindset",
+    title: "RecallLab",
+    year: "2025",
+    discipline: "UI/UX Design",
+    role: "UI/UX Designer and Full Stack Developer",
+    description:
+      "A UI design for a study-habits app aimed at students. It covers a focus timer with distraction logging, subject tracking, flashcards with Review, Blurting, and Feynman modes, and a progress dashboard with AI insights. The dark, teal-accented interface spans login, dashboard, timer, subjects, flashcards, analytics, and settings.",
+    tags: ["UI/UX", "Product Design", "Study", "AI", "Figma"],
+    images: [
+      "/projects/recall-lab.svg",
+      "/projects/recall-lab/Login Page.png",
+      "/projects/recall-lab/Dashboard Page.png",
+    ],
+    featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-teal-700 via-teal-600 to-teal-500",
+  },
+  {
+    title: "LuminaMind",
+    year: "2025",
+    discipline: "UI/UX Design",
+    role: "Machine Learning Researcher / UI/UX Designer",
+    description:
+      "A machine learning proof-of-concept that predicts growing stress among Filipino college students using a Random Forest classifier trained on a filtered, culturally contextualized dataset. It includes a high-fidelity prototype of how students would see predictive feedback. The prototype reached 53% accuracy on a small dataset, and the paper documents its limitations and next steps.",
+    tags: ["ML", "Python", "scikit-learn", "Research", "Figma", "UI/UX"],
+    images: [
+      "/projects/lumina-mind.svg",
+      "/projects/lumina-mind/Question-1.png",
+      "/projects/lumina-mind/Mild Result.png",
+      "/projects/lumina-mind/Moderate Result.png",
+      "/projects/lumina-mind/Severe Result.png",
+    ],
+    featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-indigo-800 via-violet-700 to-pink-600",
+  },
+  {
+    title: "Grind Set",
     year: "2024",
     discipline: "Full Stack",
-    role: "Full Stack Developer / UI/UX Designer",
-    description: "A web-based platform designed to streamline the delegation, tracking, and completion of work, enhancing organizational productivity and accountability.",
-    tags: ["Web", "Full Stack", "Productivity", "UI/UX"],
-    images: ["/projects/grindset.svg"],
+    role: "UI/UX Designer and Full Stack Developer",
+    description:
+      "An employee task management system with separate admin and employee views. Admins create and assign tasks, manage users, and track deadlines on a dashboard, while employees view assigned tasks and update their status. It supports full CRUD and filtering by due today, overdue, and no deadline.",
+    tags: ["Web", "Full Stack", "Productivity", "PHP", "MySQL"],
+    images: [
+      "/projects/grindset.svg",
+      "/projects/grindset/Login Page.png",
+      "/projects/grindset/Admin Page.png",
+      "/projects/grindset/User Page.png",
+    ],
     featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-orange-600 via-amber-500 to-rose-500",
   },
   {
-    title: "Chrono-List",
+    title: "Chronolist",
     year: "2023",
     discipline: "Frontend",
-    role: "Front End Developer",
-    description: "A specialized digital task management tool designed to help students organize academic and personal tasks, set priorities, and track progress.",
-    tags: ["Web", "Frontend", "Productivity", "Education"],
-    images: ["/projects/chrono-list.svg"],
+    role: "UI/UX Designer and Frontend Developer",
+    description:
+      "A student task manager for organizing schoolwork, hobbies, and daily routines. It uses a relational database with user accounts, tasks, and task types; I designed the entity-relationship diagram and built part of the interface. The app uses SQL joins to surface in-progress tasks and deadlines due within seven days.",
+    tags: ["Desktop", "Frontend", "Productivity", "Java", "MySQL"],
+    images: [
+      "/projects/chrono-list.svg",
+      "/projects/chrono-list/Landing Page.png",
+      "/projects/chrono-list/Home Page.png",
+      "/projects/chrono-list/Home Screen.png",
+      "/projects/chrono-list/Landing Page (1).png",
+    ],
     featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-sky-600 via-blue-600 to-indigo-600",
+  },
+  {
+    title: "Pallitab",
+    year: "2025",
+    discipline: "Game Dev",
+    role: "UI/UX Designer and Mobile, Full Stack, and Game Developer",
+    description:
+      "A reading-comprehension app that presents classic Filipino stories in English. Learners unlock stories as they earn XP, giving reading a game-like sense of progression. After each story, WH-question exercises in multiple-choice, true/false, and sequencing formats test comprehension with instant feedback, and a parent and teacher dashboard tracks each learner's progress.",
+    tags: ["Mobile", "Game Dev", "UI/UX", "Educational", "Flutter", "Firebase"],
+    images: [
+      "/projects/palitab.svg",
+      "/projects/palitab/Onboarding Page.png",
+      "/projects/palitab/Onboarding 2 Page.png",
+      "/projects/palitab/Login Page.jpg",
+      "/projects/palitab/Student Dashboard.png",
+      "/projects/palitab/Parent&Teacher Dashboard.png",
+    ],
+    featured: true,
+    url: "#",
+    titleSlide: true,
+    accent: "from-violet-600 via-fuchsia-600 to-rose-500",
+  },
+  {
+    title: "EfficiAdmin / OSAD Hub",
+    year: "2025",
+    discipline: "QA",
+    role: "UI/UX Designer and Quality Assurance Analyst/Tester",
+    description:
+      "An administrative workflow system for the College of Computer Studies Dean's Office at UIC, connecting to the OSAD Digital Hub. It replaces paper forms, Google Forms, and spreadsheets for student requests and equipment borrowing: student officers book equipment and write event activity plans in a built-in document editor with templates, e-signature, and PDF export; assistants and the Dean review and approve, reject, or return requests; staff track inventory, mark items returned or overdue, and process walk-in checkouts. Role-based access covers the Dean, admin assistants, and student officers, with status dashboards and notifications.",
+    tags: ["Web", "QA", "Collaboration", "Education", "Laravel", "MySQL"],
+    images: ["/projects/effici-admin.svg"],
+    featured: false,
+    url: "#",
+  },
+  {
+    title: "CLINI-GUIDE",
+    year: "2025",
+    discipline: "UI/UX Design",
+    role: "Lead Researcher and UI/UX Designer",
+    description:
+      "A quantitative research project designing a mobile healthcare app for senior citizens and persons with disabilities who often struggle with long waits and travel to clinics. The app lets patients receive lab results, find nearby clinics, and manage checkup and follow-up appointments through an interface built for elderly and PWD users. The study benchmarks it against KonsultaMD, HealthNow PH, and Medifi, and evaluates the design with a heuristic assessment and the 18-item mHealth App Usability Questionnaire (mAUQ).",
+    tags: ["Mobile", "UI/UX", "Research", "Healthcare", "Accessibility", "Figma"],
+    images: [
+      "/projects/clini-guide.svg",
+      "/projects/clini-guide/Welcome Page.png",
+      "/projects/clini-guide/Login Page.png",
+      "/projects/clini-guide/Patient Dashboard Page.png",
+      "/projects/clini-guide/Doctor Dashboard Page.png",
+    ],
+    featured: false,
+    url: "#",
+    titleSlide: true,
+    accent: "from-blue-600 via-cyan-600 to-emerald-600",
+  },
+  {
+    title: "ByteBack",
+    year: "2025",
+    discipline: "Mobile Dev",
+    role: "UI/UX Designer and Mobile & Full Stack Developer",
+    description:
+      "A second-hand tech marketplace concept (formerly ReBooted) that gives old gadgets a second life instead of sending them to landfills as e-waste. Users list and sell used tech and complete transactions through in-app chat, a map-based feature guides users to nearby e-waste collection points, and local meetups for green tech let buyers and sellers trade in person. The rollout plan is a niche launch, then trust building, then expansion into more product categories.",
+    tags: ["Mobile", "Concept", "Sustainability", "UI/UX", "Product"],
+    images: ["/projects/reboot.svg"],
+    featured: false,
+    url: "#",
   },
   {
     title: "Hotel Management",
@@ -132,6 +311,7 @@ const projects: Project[] = [
     tags: ["Web", "Full Stack", "Management", "Automation"],
     images: ["/projects/hotel.svg"],
     featured: false,
+    url: "#",
   },
 ]
 
@@ -183,6 +363,7 @@ export function ProjectsSection() {
           <AnimatePresence mode="popLayout">
             {visible.map((project) => {
               const meta = DISCIPLINE_META[project.discipline]
+              const isHighlighted = Boolean(project.highlight)
               return (
                 <TiltCard key={project.title} maxTilt={5} className="h-full rounded-2xl">
                   <motion.article
@@ -192,14 +373,20 @@ export function ProjectsSection() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.94 }}
                     transition={{ duration: 0.35 }}
-                    className="group flex flex-col h-full overflow-hidden rounded-2xl bg-white dark:bg-gray-950 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-2xl active:shadow-xl hover:-translate-y-1.5 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all"
+                    className={`group flex flex-col h-full overflow-hidden rounded-2xl bg-white dark:bg-gray-950 border shadow-lg hover:shadow-2xl active:shadow-xl hover:-translate-y-1.5 active:translate-y-0 active:scale-[0.98] touch-manipulation transition-all ${
+                      isHighlighted
+                        ? "border-violet-400/70 dark:border-violet-400/40 ring-2 ring-violet-500/40 dark:ring-violet-400/30 shadow-violet-500/20 hover:shadow-violet-500/30"
+                        : "border-black/10 dark:border-white/10"
+                    }`}
                   >
-                    {/* Cover: 1 photo = static, 2+ photos = 3s auto carousel */}
+                    {/* Cover: title slide + screenshots = 3s auto carousel */}
                     <ProjectCover
                       images={project.images}
                       title={project.title}
                       year={project.year}
                       featured={project.featured}
+                      accent={project.accent}
+                      titleSlide={project.titleSlide}
                     />
 
                     <div className="flex flex-col flex-1 p-5 md:p-6">
@@ -207,9 +394,23 @@ export function ProjectsSection() {
                         <meta.icon size={13} />
                         {project.discipline}
                       </span>
-                      <h3 className="font-display text-xl font-bold mt-2.5 text-gray-900 dark:text-white">
-                        {project.title}
-                      </h3>
+                      <div className="mt-2.5 flex items-start justify-between gap-3">
+                        <h3 className="font-display text-xl font-bold text-gray-900 dark:text-white">
+                          {project.title}
+                        </h3>
+                        {project.url && (
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Open the live ${project.title} site in a new tab`}
+                            title="View live site"
+                            className="shrink-0 inline-flex items-center justify-center w-10 h-10 -mt-1 rounded-full border border-black/10 dark:border-white/15 bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-blue-600 hover:via-violet-600 hover:to-fuchsia-600 hover:border-transparent active:scale-90 transition-all touch-manipulation"
+                          >
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
+                      </div>
                       <p className="mt-1 text-xs font-bold uppercase tracking-wider text-gradient-brand">{project.role}</p>
                       <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1">
                         {project.description}

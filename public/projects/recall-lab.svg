@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="0.55" stop-color="#0d9488"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#ffffff" opacity="0.16"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <rect width="800" height="450" fill="url(#dots)"/>
+  <circle cx="700" cy="370" r="150" fill="#ffffff" opacity="0.12"/>
+  <circle cx="110" cy="90" r="110" fill="#000000" opacity="0.12"/>
+  <circle cx="660" cy="210" r="84" fill="none" stroke="#ffffff" stroke-width="10" opacity="0.55"/>
+  <circle cx="660" cy="210" r="48" fill="none" stroke="#ffffff" stroke-width="10" opacity="0.4"/>
+  <path d="M660 210 V164 M660 210 l38 24" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity="0.7"/>
+  <text x="64" y="220" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="bold" fill="#ffffff">RecallLab</text>
+  <text x="66" y="266" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#ffffff" opacity="0.85">Study Habits · UI Design</text>
+  <rect x="66" y="296" width="120" height="8" rx="4" fill="#ffffff" opacity="0.6"/>
+</svg>

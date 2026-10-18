@@ -20,6 +20,20 @@ const experiences = [
     ]
   },
   {
+    title: "UI/UX Designer and Full Stack Developer",
+    company: "Socorra",
+    period: "2025 — 2026",
+    current: false,
+    accent: "from-teal-500 via-cyan-500 to-blue-500",
+    tags: ["UI/UX Design", "Full Stack", "AI/ML", "EdTech", "React", "Supabase"],
+    responsibilities: [
+      "Designed and built an AI-assisted checker for paper-based multiple-choice tests",
+      "Developed a vision-language pipeline that reads handwritten answers, routing low-confidence readings to teachers for review",
+      "Produced DepEd-aligned item and competency analytics with Excel exports for class records",
+      "Crafted a teacher-first UI/UX for scanning, reviewing, and grading answer sheets"
+    ]
+  },
+  {
     title: "Quality Assurance (QA)",
     company: "Effici-admin / OSAD Digital Hub",
     period: "2024 — 2025",

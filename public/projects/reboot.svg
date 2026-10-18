@@ -15,7 +15,7 @@
   <circle cx="700" cy="380" r="120" fill="#000000" opacity="0.12"/>
   <path d="M610 160 l60 60 -60 60 -60 -60 Z" fill="none" stroke="#ffffff" stroke-width="10" opacity="0.55"/>
   <circle cx="610" cy="220" r="12" fill="#ffffff" opacity="0.7"/>
-  <text x="64" y="220" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="bold" fill="#ffffff">Reboot</text>
+  <text x="64" y="220" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="bold" fill="#ffffff">Byte Back</text>
   <text x="66" y="266" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#ffffff" opacity="0.85">E-commerce Mobile App</text>
   <rect x="66" y="296" width="120" height="8" rx="4" fill="#ffffff" opacity="0.6"/>
 </svg>

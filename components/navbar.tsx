@@ -97,7 +97,7 @@ export function Navbar() {
             aria-label="Go to home"
             className="flex items-center gap-2.5 group"
           >
-            <span className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-bold text-sm text-white bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg shadow-violet-600/30 group-hover:shadow-violet-600/50 group-hover:scale-105 transition-all">
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center font-sans font-bold text-sm text-white bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 shadow-lg shadow-violet-600/30 group-hover:shadow-violet-600/50 group-hover:scale-105 transition-all">
               FM
             </span>
             <span className="hidden sm:block text-left leading-tight">

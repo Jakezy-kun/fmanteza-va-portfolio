@@ -5,7 +5,7 @@ import { HeroSection } from "@/components/sections/hero"
 import { AboutSection } from "@/components/sections/about"
 import { SkillsSection } from "@/components/sections/skills"
 import { ExperienceSection } from "@/components/sections/experience"
-import { PlaygroundSection } from "@/components/sections/playground"
+import { CertificatesSection } from "@/components/sections/certificates"
 import { ProjectsSection } from "@/components/sections/projects"
 import { ContactSection } from "@/components/sections/contact"
 import { BackToTop } from "@/components/ui/back-to-top"
@@ -25,7 +25,7 @@ export default function Home() {
       <AboutSection />
       <SkillsSection />
       <ExperienceSection />
-      <PlaygroundSection />
+      <CertificatesSection />
       <SectionDivider />
       <ProjectsSection />
       <SectionDivider flip />

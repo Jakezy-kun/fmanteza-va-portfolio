@@ -1,11 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Mail, MapPin, Download, ArrowUpRight, Copy, Check } from "lucide-react"
+import { Mail, MapPin, Download, ArrowUpRight, Copy, Check, Pause, Play } from "lucide-react"
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons"
 import { useState } from "react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { Magnetic } from "@/components/ui/magnetic"
+import { PlasmaCanvas, PLASMA_PALETTES, type PlasmaPreset } from "@/components/ui/plasma-canvas"
 
 const EMAIL = "fmanteza_230000001892@uic.edu.ph"
 const RESUME_HREF = "/manteza-resume.pdf"
@@ -36,6 +37,8 @@ const channels = [
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false)
+  const [running, setRunning] = useState(true)
+  const [preset, setPreset] = useState<PlasmaPreset>("aurora")
 
   const copyEmail = async () => {
     try {
@@ -122,12 +125,43 @@ export function ContactSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: 0.12 }}
             whileTap={{ scale: 0.99 }}
-            className="relative flex flex-col justify-center items-center text-center rounded-3xl p-8 md:p-10 overflow-hidden bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 text-white shadow-2xl shadow-violet-600/30 touch-manipulation"
+            style={{ touchAction: "pan-y" }}
+            className="relative flex flex-col justify-center items-center text-center rounded-3xl px-8 pt-10 pb-20 md:px-10 md:pt-12 overflow-hidden bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 text-white shadow-2xl shadow-violet-600/30 touch-manipulation"
           >
-            <div className="absolute inset-0 bg-dot-grid opacity-25" aria-hidden />
-            <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/20 blur-3xl" aria-hidden />
+            {/* live plasma, follows the pointer; the gradient above shows until it paints */}
+            <PlasmaCanvas preset={preset} running={running} />
+
+            {/* plasma controls */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-2xl bg-black/35 glass border border-white/15 p-1.5">
+              <button
+                type="button"
+                onClick={() => setRunning((r) => !r)}
+                aria-pressed={!running}
+                aria-label={running ? "Pause background animation" : "Play background animation"}
+                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/15 transition-colors"
+              >
+                {running ? <Pause size={14} /> : <Play size={14} />}
+              </button>
+              <div className="flex items-center gap-1.5" role="group" aria-label="Background colors">
+                {(Object.keys(PLASMA_PALETTES) as PlasmaPreset[]).map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setPreset(key)}
+                    aria-pressed={preset === key}
+                    title={PLASMA_PALETTES[key].label}
+                    className={`w-9 h-9 rounded-xl bg-gradient-to-br ${PLASMA_PALETTES[key].swatch} border-2 transition-all active:scale-95 ${
+                      preset === key ? "border-white shadow-lg" : "border-white/20 hover:border-white/50"
+                    }`}
+                  >
+                    <span className="sr-only">{PLASMA_PALETTES[key].label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="relative">
-              <h3 className="font-display text-2xl md:text-3xl font-bold mb-3 text-balance">
+              <h3 className="font-display text-2xl md:text-3xl font-bold mb-3 text-balance [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]">
                 Interested in working together?
               </h3>
               <p className="text-white/85 mb-7 max-w-sm">

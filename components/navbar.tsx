@@ -10,6 +10,7 @@ const navItems = [
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
   { name: "Experience", href: "#experience" },
+  { name: "Certificates", href: "#certificates" },
   { name: "Projects", href: "#projects" },
   { name: "Contact", href: "#contact" },
 ]
@@ -101,7 +102,7 @@ export function Navbar() {
               FM
             </span>
             <span className="hidden sm:block text-left leading-tight">
-              <span className="block text-sm font-bold text-gray-900 dark:text-white font-display">
+              <span className="block text-sm font-bold whitespace-nowrap text-gray-900 dark:text-white font-display">
                 Ferdinand Manteza
               </span>
               <span className="block text-[11px] text-gray-500 dark:text-gray-400">
@@ -111,12 +112,12 @@ export function Navbar() {
           </motion.button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`relative px-2.5 xl:px-3 py-2 text-sm whitespace-nowrap font-medium rounded-lg transition-colors ${
                   active === item.href
                     ? "text-blue-700 dark:text-white"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
@@ -134,7 +135,7 @@ export function Navbar() {
 
             {/* Subtle live clock */}
             <div
-              className="hidden lg:flex items-center gap-1.5 ml-2 px-2.5 py-1.5 text-xs text-gray-500 dark:text-gray-400"
+              className="hidden xl:flex items-center gap-1.5 ml-2 whitespace-nowrap px-2.5 py-1.5 text-xs text-gray-500 dark:text-gray-400"
               title="Philippines time"
             >
               <Clock className="h-3.5 w-3.5" />
@@ -146,7 +147,7 @@ export function Navbar() {
               <ThemeToggle />
               <button
                 onClick={() => scrollToSection("#contact")}
-                className="px-4 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 bg-[length:180%_100%] hover:bg-right shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 hover:-translate-y-px transition-all"
+                className="px-4 py-2 text-sm font-semibold whitespace-nowrap text-white rounded-full bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 bg-[length:180%_100%] hover:bg-right shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40 hover:-translate-y-px transition-all"
               >
                 Hire Me
               </button>
@@ -154,7 +155,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile controls */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
@@ -187,14 +188,14 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="md:hidden fixed inset-0 top-16 -z-10 bg-black/20 backdrop-blur-[1px] cursor-default"
+              className="lg:hidden fixed inset-0 top-16 -z-10 bg-black/20 backdrop-blur-[1px] cursor-default"
             />
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
-              className="md:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 glass border-t border-black/5 dark:border-white/10"
+              className="lg:hidden overflow-hidden bg-white/95 dark:bg-gray-950/95 glass border-t border-black/5 dark:border-white/10"
             >
               <div className="px-4 py-4 space-y-1">
                 {navItems.map((item, i) => (

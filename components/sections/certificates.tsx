@@ -3,9 +3,10 @@
 import { useState } from "react"
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
-import { Award, Building2, CalendarDays, ChevronDown, Layers, Star, ZoomIn } from "lucide-react"
+import { Award, Building2, CalendarDays, ChevronDown, Layers, Pause, Play, Star, ZoomIn } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { CertificateLightbox } from "@/components/ui/certificate-lightbox"
+import { CertificateMarquee } from "@/components/ui/certificate-marquee"
 import {
   CERTIFICATES,
   CERTIFICATE_CATEGORIES,
@@ -19,8 +20,6 @@ import {
 
 const sorted = [...CERTIFICATES].sort((a, b) => b.date.localeCompare(a.date))
 const categories = CERTIFICATE_CATEGORIES.filter((c) => sorted.some((x) => x.category === c.id))
-const featured = sorted.filter((c) => c.featured).slice(0, 3)
-const featuredSlugs = new Set(featured.map((c) => c.slug))
 const issuerCount = new Set(sorted.map((c) => c.issuer)).size
 const byCategory = (id: CertificateCategory) => sorted.filter((c) => c.category === id)
 const catInfo = (id: CertificateCategory) => CERTIFICATE_CATEGORIES.find((c) => c.id === id)!
@@ -33,12 +32,13 @@ const PREVIEW = 6
 export function CertificatesSection() {
   const [active, setActive] = useState<CertificateCategory | "all">("all")
   const [expanded, setExpanded] = useState<Partial<Record<CertificateCategory, boolean>>>({})
+  const [carouselPaused, setCarouselPaused] = useState(false)
   const [viewer, setViewer] = useState<{ items: Certificate[]; index: number } | null>(null)
 
-  // groups shown under "All" skip the featured ones, which sit on top
+  // the Featured carousel always shows every certificate; the groups below are the browsable index
   const groups = categories
     .map((c) => {
-      const all = byCategory(c.id).filter((x) => !featuredSlugs.has(x.slug))
+      const all = byCategory(c.id)
       const visible = expanded[c.id] ? all : all.slice(0, PREVIEW)
       return { info: c, all, visible }
     })
@@ -47,7 +47,7 @@ export function CertificatesSection() {
   const open = (list: Certificate[], cert: Certificate) => setViewer({ items: list, index: list.indexOf(cert) })
 
   // browsing order in the viewer = what the visitor currently sees
-  const allVisible = [...featured, ...groups.flatMap((g) => g.visible)]
+  const allVisible = groups.flatMap((g) => g.visible)
 
   return (
     <section id="certificates" className="relative py-20 md:py-28 px-4 bg-white dark:bg-gray-950 overflow-hidden">
@@ -103,18 +103,44 @@ export function CertificatesSection() {
           >
             {active === "all" ? (
               <div className="space-y-14">
-                {featured.length > 0 && (
+                {sorted.length > 0 && (
                   <div>
                     <GroupHeader
                       icon={Star}
                       gradient="from-amber-400 to-orange-500"
                       title="Featured"
-                      count={featured.length}
+                      count={sorted.length}
+                      blurb="Every certificate, newest first."
                     />
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                      {featured.map((c, i) => (
-                        <CertCard key={c.slug} cert={c} index={i} featured onOpen={() => open(allVisible, c)} />
-                      ))}
+                    <div className="-mx-4 sm:mx-0">
+                      <CertificateMarquee
+                        items={sorted}
+                        paused={carouselPaused || !!viewer}
+                        onOpen={(c) => open(sorted, c)}
+                      />
+                    </div>
+
+                    {/* motion control + live count, same footer pattern as Skills */}
+                    <div className="mt-6 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setCarouselPaused((p) => !p)}
+                        aria-pressed={carouselPaused}
+                        className="marquee-toggle inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-300 bg-white/80 dark:bg-white/[0.04] border border-black/10 dark:border-white/10 hover:text-gray-900 dark:hover:text-white hover:border-violet-500/40 active:scale-95 touch-manipulation transition-all"
+                      >
+                        {carouselPaused ? <Play size={14} /> : <Pause size={14} />}
+                        {carouselPaused ? "Resume carousel" : "Pause carousel"}
+                      </button>
+
+                      <div className="flex items-center gap-3 text-sm">
+                        <span className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                          <Award size={15} className="text-white" />
+                        </span>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold text-gray-900 dark:text-white">{sorted.length} certificates</span>{" "}
+                          · tap a card to view it full size
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -188,17 +214,7 @@ function CategoryView({ id, onOpen }: { id: CertificateCategory; onOpen: (list: 
   )
 }
 
-function CertCard({
-  cert,
-  index,
-  featured = false,
-  onOpen,
-}: {
-  cert: Certificate
-  index: number
-  featured?: boolean
-  onOpen: () => void
-}) {
+function CertCard({ cert, index, onOpen }: { cert: Certificate; index: number; onOpen: () => void }) {
   const info = catInfo(cert.category)
   return (
     <motion.button
@@ -210,11 +226,7 @@ function CertCard({
       transition={{ duration: 0.5, delay: (index % 3) * 0.07, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ scale: 0.98 }}
       aria-label={`View certificate: ${cert.title}`}
-      className={`group relative flex flex-col text-left rounded-2xl overflow-hidden bg-white dark:bg-white/[0.035] border shadow-md hover:shadow-xl hover:-translate-y-1 touch-manipulation transition-[transform,box-shadow,border-color] duration-300 ${
-        featured
-          ? "border-amber-500/30 dark:border-amber-400/25 hover:shadow-amber-500/20"
-          : "border-black/10 dark:border-white/10 hover:border-violet-500/30"
-      }`}
+      className="group relative flex flex-col text-left rounded-2xl overflow-hidden bg-white dark:bg-white/[0.035] border border-black/10 dark:border-white/10 hover:border-violet-500/30 shadow-md hover:shadow-xl hover:-translate-y-1 touch-manipulation transition-[transform,box-shadow,border-color] duration-300"
     >
       <div className="relative aspect-[1.414] overflow-hidden bg-gray-100 dark:bg-gray-800">
         <Image
@@ -236,12 +248,6 @@ function CertCard({
           <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${info.gradient}`} />
           {info.short}
         </span>
-        {featured && (
-          <span className="absolute top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md">
-            <Star size={11} className="fill-current" />
-            Featured
-          </span>
-        )}
       </div>
 
       <div className="flex-1 flex flex-col p-4 sm:p-5">

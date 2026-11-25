@@ -8,7 +8,9 @@ import { BadgeCheck, Mic, Presentation, Trophy, HeartHandshake } from "lucide-re
  *   1. Put the image in public/certificates/<category>/<slug>.webp
  *      plus a small <slug>-thumb.webp (about 640px wide).
  *   2. Add an entry below. Categories with no entries are hidden.
- *   3. Set `featured: true` on up to three to pin them at the top.
+ *
+ * That's it — every entry automatically joins the looping Featured
+ * carousel (newest first), the category tabs and the counters.
  * ------------------------------------------------------------------ */
 
 export type CertificateCategory = "courses" | "events" | "workshops" | "competitions" | "leadership"
@@ -86,7 +88,6 @@ export interface Certificate {
   note?: string
   /** Link to verify the credential online, if there is one. */
   credentialUrl?: string
-  featured?: boolean
   image: { w: number; h: number; blur: string }
 }
 
@@ -101,7 +102,6 @@ export const CERTIFICATES: Certificate[] = [
     role: "Esports Technical Director",
     location: "University of the Immaculate Conception, Davao City",
     note: "Theme: “Future Ready ITE: Shaping the Digital Future of IT Students in Davao Region.”",
-    featured: true,
     image: {
       w: 1600,
       h: 1132,
@@ -118,7 +118,6 @@ export const CERTIFICATES: Certificate[] = [
     role: "Attendee",
     location: "Henry Sy Sr. Hall, De La Salle University, Manila",
     note: "Institute of Biomedical Engineering and Health Technologies research talk series.",
-    featured: true,
     image: {
       w: 1600,
       h: 1130,
@@ -134,7 +133,6 @@ export const CERTIFICATES: Certificate[] = [
     kind: "Certificate of Attendance",
     role: "Attendee",
     location: "Orange & Bronze Software Labs, Makati City",
-    featured: true,
     image: {
       w: 1600,
       h: 1131,

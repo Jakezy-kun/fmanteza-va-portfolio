@@ -201,6 +201,7 @@
     animation-direction: reverse;
   }
   .marquee:hover .marquee-track,
+  .marquee:has(:focus-visible) .marquee-track,
   .marquee[data-paused="true"] .marquee-track {
     animation-play-state: paused;
   }

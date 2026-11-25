@@ -186,4 +186,73 @@
   .ring-glow-blue {
     box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 8px 40px -8px rgba(37, 99, 235, 0.55);
   }
+
+  /* ---------- Infinite logo marquee (Skills) ---------- */
+  /* Track holds two identical groups; sliding by -50% loops seamlessly. */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  }
+  .marquee-track {
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+    will-change: transform;
+  }
+  .marquee-track[data-reverse="true"] {
+    animation-direction: reverse;
+  }
+  .marquee:hover .marquee-track,
+  .marquee[data-paused="true"] .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Brand colour per theme, fed by --logo-light / --logo-dark. */
+  .logo-icon {
+    color: var(--logo-light);
+  }
+  .dark .logo-icon {
+    color: var(--logo-dark, var(--logo-light));
+  }
+  .logo-tile {
+    --logo-accent: var(--logo-light);
+  }
+  .dark .logo-tile {
+    --logo-accent: var(--logo-dark, var(--logo-light));
+  }
+  .logo-tile:hover,
+  .logo-tile[data-spotlight="on"] {
+    border-color: color-mix(in srgb, var(--logo-accent) 55%, transparent);
+    box-shadow: 0 10px 34px -12px color-mix(in srgb, var(--logo-accent) 60%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* No auto-scroll: show one static, wrapped set of logos instead. */
+    .marquee-mask {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee-track {
+      animation: none !important;
+      width: 100%;
+      justify-content: center;
+    }
+    .marquee-group {
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-right: 0;
+    }
+    .marquee-clone,
+    .marquee-pad,
+    .marquee-toggle {
+      display: none !important;
+    }
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }

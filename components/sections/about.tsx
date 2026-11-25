@@ -39,7 +39,7 @@ const education = [
   },
   {
     school: "Holy Cross College of Calinan",
-    program: "STEM Strand",
+    program: "Science, Technology, Engineering and Mathematics (STEM) Strand",
     period: "2010 — 2022",
     current: false,
     logos: [LOGOS.holyCross],
@@ -55,9 +55,9 @@ type Achievement = {
 }
 
 const achievements: Achievement[] = [
-  { title: "3rd Honor", detail: "3rd Year · 1st Semester", period: "2025–2026", tag: "Academic", logo: LOGOS.uic },
-  { title: "2nd Honor", detail: "3rd Year · 2nd Semester", period: "2026–2027", tag: "Academic", logo: LOGOS.uic },
-  { title: "Core Member", detail: "Google Developer Groups On Campus UIC", period: "2023–2024", tag: "Community", logo: LOGOS.gdgUic },
+  { title: "3rd Honor", detail: "3rd Year · 1st Semester", period: "2024–2025", tag: "Academic", logo: LOGOS.uic },
+  { title: "2nd Honor", detail: "3rd Year · 2nd Semester", period: "2025–2026", tag: "Academic", logo: LOGOS.uic },
+  { title: "Core Member — Front-End Developer", detail: "Google Developer Groups On Campus UIC", period: "2023–2024", tag: "Community", logo: LOGOS.gdgUic },
   { title: "Esports Technical Team", detail: "Philippine Society of Information Technology Students of Region XI", period: "2023–2024", tag: "Organization", logo: LOGOS.psits },
 ]
 

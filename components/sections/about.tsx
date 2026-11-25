@@ -58,7 +58,7 @@ const achievements: Achievement[] = [
   { title: "3rd Honor", detail: "3rd Year · 1st Semester", period: "2024–2025", tag: "Academic", logo: LOGOS.uic },
   { title: "2nd Honor", detail: "3rd Year · 2nd Semester", period: "2025–2026", tag: "Academic", logo: LOGOS.uic },
   { title: "Core Member — Front-End Developer", detail: "Google Developer Groups On Campus UIC", period: "2023–2024", tag: "Community", logo: LOGOS.gdgUic },
-  { title: "Esports Technical Team", detail: "Philippine Society of Information Technology Students of Region XI", period: "2023–2024", tag: "Organization", logo: LOGOS.psits },
+  { title: "Esports Technical Team", detail: "Philippine Society of Information Technology Students of Region XI", period: "2023–2025", tag: "Organization", logo: LOGOS.psits },
 ]
 
 const principles = [

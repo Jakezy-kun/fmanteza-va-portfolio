@@ -9,7 +9,6 @@ import {
   Lightbulb,
   Award,
   MapPin,
-  Gamepad2,
   type LucideIcon,
 } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -22,7 +21,8 @@ const LOGOS = {
   uic: { src: "/logos/uic.png", alt: "University of the Immaculate Conception seal", w: 150, h: 150 },
   ccs: { src: "/logos/uic-ccs.png", alt: "UIC College of Computer Studies seal", w: 190, h: 256 },
   holyCross: { src: "/logos/holy-cross.png", alt: "Holy Cross College of Calinan seal", w: 256, h: 256 },
-  gdg: { src: "/logos/gdg.png", alt: "Google Developer Groups logo", w: 320, h: 188 },
+  gdgUic: { src: "/logos/gdg-on-campus-uic.png", alt: "Google Developer Groups On Campus UIC logo", w: 440, h: 181 },
+  psits: { src: "/logos/psits.png", alt: "PSITS Region XI seal", w: 256, h: 257 },
 } satisfies Record<string, Logo>
 
 /* ---------- data ---------- */
@@ -51,15 +51,14 @@ type Achievement = {
   detail: string
   period: string
   tag: string
-  logo?: Logo
-  icon?: LucideIcon
+  logo: Logo
 }
 
 const achievements: Achievement[] = [
   { title: "3rd Honor", detail: "3rd Year · 1st Semester", period: "2025–2026", tag: "Academic", logo: LOGOS.uic },
   { title: "2nd Honor", detail: "3rd Year · 2nd Semester", period: "2026–2027", tag: "Academic", logo: LOGOS.uic },
-  { title: "Core Member", detail: "UIC Google Developer Groups", period: "2023–2024", tag: "Community", logo: LOGOS.gdg },
-  { title: "Esports Technical Team", detail: "PSITS Region 11", period: "2023–2024", tag: "Organization", icon: Gamepad2 },
+  { title: "Core Member", detail: "Google Developer Groups On Campus UIC", period: "2023–2024", tag: "Community", logo: LOGOS.gdgUic },
+  { title: "Esports Technical Team", detail: "Philippine Society of Information Technology Students of Region XI", period: "2023–2024", tag: "Organization", logo: LOGOS.psits },
 ]
 
 const principles = [
@@ -167,7 +166,7 @@ export function AboutSection() {
 
         <div className="grid lg:grid-cols-12 gap-5 md:gap-6">
           {/* ---------- Education: timeline with school seals ---------- */}
-          <motion.article {...reveal(0)} className={`${cardBase} lg:col-span-7 p-6 md:p-8 hover:shadow-blue-500/20`}>
+          <motion.article {...reveal(0)} className={`${cardBase} lg:col-span-6 p-6 md:p-8 hover:shadow-blue-500/20`}>
             <span className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400" aria-hidden />
             <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl" aria-hidden />
             <CardHeader icon={GraduationCap} title="Education" accent="from-blue-500 to-cyan-400" />
@@ -237,7 +236,7 @@ export function AboutSection() {
           </motion.article>
 
           {/* ---------- Key Achievements: rows with issuer logos ---------- */}
-          <motion.article {...reveal(1)} className={`${cardBase} lg:col-span-5 p-6 md:p-8 hover:shadow-amber-500/20`}>
+          <motion.article {...reveal(1)} className={`${cardBase} lg:col-span-6 p-6 md:p-8 hover:shadow-amber-500/20`}>
             <span className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500" aria-hidden />
             <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl" aria-hidden />
             <CardHeader icon={Award} title="Key Achievements" accent="from-amber-500 to-orange-500" />
@@ -249,17 +248,16 @@ export function AboutSection() {
                   whileTap={{ scale: 0.98 }}
                   className="flex items-center gap-3.5 rounded-2xl p-2.5 pr-3.5 -mx-2.5 hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors"
                 >
-                  {a.logo === LOGOS.gdg ? (
-                    <span className="w-11 h-11 shrink-0 rounded-xl bg-white ring-1 ring-black/10 dark:ring-white/25 shadow-sm flex items-center justify-center">
-                      <Image src={a.logo.src} alt={a.logo.alt} width={a.logo.w} height={a.logo.h} sizes="44px" className="w-8 h-auto" />
-                    </span>
-                  ) : a.logo ? (
-                    <SealCoin logo={a.logo} size={44} />
-                  ) : a.icon ? (
-                    <span className="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 shadow-sm flex items-center justify-center">
-                      <a.icon className="w-5 h-5 text-white" />
-                    </span>
-                  ) : null}
+                  {/* fixed-width logo column: round seals and the wide GDG lockup line up */}
+                  <span className="w-[76px] shrink-0 flex justify-center">
+                    {a.logo === LOGOS.gdgUic ? (
+                      <span className="w-[76px] h-12 rounded-xl bg-white ring-1 ring-black/10 dark:ring-white/25 shadow-md flex items-center justify-center">
+                        <Image src={a.logo.src} alt={a.logo.alt} width={a.logo.w} height={a.logo.h} sizes="68px" className="w-[66px] h-auto" />
+                      </span>
+                    ) : (
+                      <SealCoin logo={a.logo} size={48} />
+                    )}
+                  </span>
 
                   <div className="min-w-0 flex-1">
                     <p className="font-display font-bold text-[15px] text-gray-900 dark:text-white leading-tight">{a.title}</p>
